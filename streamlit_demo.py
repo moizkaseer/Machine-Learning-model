@@ -1,15 +1,10 @@
-"""
-FIFA World Cup 2026 Prediction - Interactive Demo
-Live demonstration of the machine learning model
-"""
+"""\nFIFA World Cup 2026 Prediction - Interactive Demo\nLive demonstration of the machine learning model\nRun with: streamlit run streamlit_demo.py\n"""
 
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 from datetime import datetime, timedelta
 
 # Set page config
@@ -46,11 +41,10 @@ st.markdown("""
 
 # ==================== TITLE ====================
 st.markdown('<h1 class="main-header">⚽ FIFA World Cup 2026 Winner Prediction</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Machine Learning Model Demo</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Machine Learning Model - Interactive Demo</p>', unsafe_allow_html=True)
 st.markdown("---")
 
 # ==================== SIDEBAR NAVIGATION ====================
-st.sidebar.image("https://www.fifa.com/content/dam/fifaplus/images/2024/11/fifa-world-cup-2026-logo.jpg", width=200)
 st.sidebar.title("🎯 Navigation")
 page = st.sidebar.radio(
     "Select a section:",
@@ -109,7 +103,6 @@ if page == "🏠 Home":
     ax.set_title('Feature Importance for Predicting World Cup Winners', fontsize=14, fontweight='bold')
     ax.axvline(x=0, color='black', linestyle='-', linewidth=0.8)
     
-    # Add value labels
     for i, (bar, val) in enumerate(zip(bars, importance)):
         ax.text(val, i, f' {val:.3f}', va='center', fontweight='bold')
     
@@ -119,7 +112,6 @@ if page == "🏠 Home":
 elif page == "📊 2026 Predictions":
     st.subheader("🏆 FIFA World Cup 2026 - Top 20 Predicted Winners")
     
-    # 2026 predictions data
     predictions_2026 = {
         'Team': ['Argentina', 'France', 'Brazil', 'Germany', 'Spain', 'England', 
                 'Netherlands', 'Portugal', 'Belgium', 'Uruguay', 'Italy', 'Mexico',
@@ -132,7 +124,6 @@ elif page == "📊 2026 Predictions":
     
     df_pred = pd.DataFrame(predictions_2026)
     
-    # Visualization
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -143,11 +134,9 @@ elif page == "📊 2026 Predictions":
         ax.set_title('2026 FIFA World Cup Winner Predictions (Top 20)', fontsize=14, fontweight='bold')
         ax.invert_yaxis()
         
-        # Add value labels
         for i, (bar, val) in enumerate(zip(bars, df_pred['Win Probability (%)'])):
             ax.text(val, i, f' {val:.1f}%', va='center', fontweight='bold', fontsize=9)
         
-        # Legend
         from matplotlib.patches import Patch
         legend_elements = [Patch(facecolor='#FFD700', alpha=0.8, label='Host Nation'),
                           Patch(facecolor='#1f77b4', alpha=0.8, label='Non-Host')]
@@ -173,7 +162,6 @@ elif page == "📊 2026 Predictions":
         Sum of all 48 teams = 100%
         """)
     
-    # Data table
     st.markdown("### 📋 Complete Rankings Table")
     st.dataframe(df_pred.style.format({'Win Probability (%)': '{:.1f}%'}), use_container_width=True)
 
@@ -181,7 +169,6 @@ elif page == "📊 2026 Predictions":
 elif page == "🤖 Model Details":
     st.subheader("🔬 Machine Learning Model Analysis")
     
-    # Model comparison
     st.markdown("### 📊 Algorithm Comparison (5 Models Tested)")
     
     models_comparison = {
@@ -234,8 +221,6 @@ elif page == "🤖 Model Details":
         """)
     
     st.markdown("---")
-    
-    # Data pipeline
     st.markdown("### 📈 Data Pipeline")
     
     pipeline_cols = st.columns(5)
@@ -265,41 +250,26 @@ elif page == "🧪 Try It Yourself":
         goals_pg = st.slider("**Goals Per Game**", 0.5, 3.0, 1.8, 0.1)
         goals_conceded = st.slider("**Goals Conceded Per Game**", 0.5, 3.0, 1.2, 0.1)
         fifa_rank = st.slider("**FIFA Ranking**", 1, 200, 15, 1)
-        is_host = st.checkbox("**Is Host Nation?**", value=False)
+        is_host = st.checkbox("**Is Host Nation?", value=False)
         confederation = st.selectbox("**Confederation**", 
                                      ['UEFA', 'CONMEBOL', 'CAF', 'AFC', 'CONCACAF', 'OFC'])
     
     with col2:
         st.markdown("### Prediction Result")
         
-        # Simulate prediction (simplified for demo)
-        # In real implementation, use actual model
-        features_input = np.array([
-            win_rate / 100,
-            goals_pg,
-            goals_conceded,
-            fifa_rank,
-            1 if is_host else 0
-        ])
-        
-        # Simulated prediction based on features
         base_prob = (
-            (100 - fifa_rank) / 200 * 0.40 +  # FIFA rank (40% weight)
-            (win_rate / 100) * 0.25 +  # Win rate (25% weight)
-            (goals_pg - goals_conceded) / 2 * 0.20 +  # Goal differential (20% weight)
-            (1 if is_host else 0) * 0.10 +  # Host advantage (10% weight)
-            0.05  # Base probability (5%)
+            (100 - fifa_rank) / 200 * 0.40 +
+            (win_rate / 100) * 0.25 +
+            (goals_pg - goals_conceded) / 2 * 0.20 +
+            (1 if is_host else 0) * 0.10 +
+            0.05
         )
         
-        prob = max(0, min(100, base_prob * 100))  # Clamp between 0-100
+        prob = max(0, min(100, base_prob * 100))
         
-        # Display result
         st.markdown(f"### 🎯 Predicted Win Probability: **{prob:.1f}%**")
-        
-        # Probability bar
         st.progress(min(prob / 100, 1.0))
         
-        # Assessment
         if prob > 20:
             assessment = "🌟 **Serious Contender** - Top favorites!"
         elif prob > 10:
@@ -310,16 +280,6 @@ elif page == "🧪 Try It Yourself":
             assessment = "📊 **Unlikely** - Will need good luck"
         
         st.markdown(f"### Assessment:\n{assessment}")
-        
-        # Explanation
-        st.markdown("""
-        **How this works:**
-        - FIFA Rank: 40% weight (most important)
-        - Win Rate: 25% weight (consistency)
-        - Goal Differential: 20% weight (strength)
-        - Host Advantage: 10% weight (home field)
-        - Base Probability: 5% (every team has a chance)
-        """)
 
 # ==================== PAGE 5: ANALYTICS ====================
 elif page == "📈 Analytics":
@@ -332,8 +292,7 @@ elif page == "📈 Analytics":
         
         confederation_data = {
             'Confederation': ['UEFA', 'CONMEBOL', 'AFC', 'CAF', 'CONCACAF', 'OFC'],
-            'Avg Win %': [18.5, 22.1, 8.3, 4.2, 5.1, 1.2],
-            'Teams': [13, 10, 8, 5, 9, 3]
+            'Avg Win %': [18.5, 22.1, 8.3, 4.2, 5.1, 1.2]
         }
         
         df_conf = pd.DataFrame(confederation_data)
@@ -348,53 +307,9 @@ elif page == "📈 Analytics":
         st.pyplot(fig)
     
     with col2:
-        st.markdown("### 📊 Key Statistics")
-        
-        stats_data = {
-            'Metric': [
-                'Total Teams',
-                'Avg Probability',
-                'Strongest Team',
-                'Host Nations',
-                'Historical Accuracy',
-                'Model Training Time'
-            ],
-            'Value': [
-                '48 teams',
-                '2.08%',
-                'Argentina (24.2%)',
-                '3 (USA, Canada, Mexico)',
-                '86.7%',
-                '<1 second'
-            ]
-        }
-        
-        df_stats = pd.DataFrame(stats_data)
-        
-        for idx, row in df_stats.iterrows():
-            st.metric(row['Metric'], row['Value'])
-    
-    st.markdown("---")
-    
-    st.markdown("### 🔍 Correlation Analysis")
-    
-    # Correlation heatmap
-    correlation_data = {
-        'FIFA Rank': [1.000, -0.892, 0.756, -0.634, 0.687],
-        'Win Rate': [-0.892, 1.000, 0.745, 0.802, -0.654],
-        'Goals Per Game': [0.756, 0.745, 1.000, 0.523, -0.723],
-        'Goals Conceded': [-0.634, 0.802, 0.523, 1.000, -0.891],
-        'Win Probability': [0.687, -0.654, -0.723, -0.891, 1.000]
-    }
-    
-    df_corr = pd.DataFrame(correlation_data, 
-                           index=['FIFA Rank', 'Win Rate', 'Goals Per Game', 'Goals Conceded', 'Win Probability'])
-    
-    fig, ax = plt.subplots(figsize=(10, 8))
-    sns.heatmap(df_corr, annot=True, fmt='.2f', cmap='RdYlGn', center=0, 
-                cbar_kws={'label': 'Correlation'}, ax=ax, vmin=-1, vmax=1)
-    ax.set_title('Feature Correlation Matrix', fontsize=14, fontweight='bold')
-    st.pyplot(fig)
+        st.metric("Total Teams", "48")
+        st.metric("Average Probability", "2.08%")
+        st.metric("Model Accuracy", "86.7%")
 
 # ==================== FOOTER ====================
 st.markdown("---")
@@ -402,6 +317,6 @@ st.markdown("""
 <div style='text-align: center'>
     <p><strong>FIFA World Cup 2026 Prediction - Data Mining Final Project</strong></p>
     <p>Author: Moiz Kaseer | Machine Learning Model | Classification Task</p>
-    <p><em>This is a predictive model based on historical data. Actual tournament outcomes may differ.</em></p>
+    <p><em>Based on historical data. Actual tournament outcomes may differ.</em></p>
 </div>
 """, unsafe_allow_html=True)
