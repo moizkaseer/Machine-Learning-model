@@ -1,4 +1,4 @@
-# FIFA World Cup 2026 Winner Prediction — Project Report
+# FIFA World Cup 2026 Winner Prediction 
 
 ## What the Project Does
 
